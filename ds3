@@ -1,0 +1,306 @@
+#include <stdio.h>
+
+int arr[100], n;
+
+void inputArray();
+void displayArray();
+void linearSearch();
+void binarySearch();
+void insertionSort();
+void selectionSort();
+void shellSort();
+
+int main()
+{
+    int choice;
+
+    inputArray();
+
+    do
+    {
+        printf("\n========== MENU ==========\n");
+        printf("1. Display Array\n");
+        printf("2. Linear Search\n");
+        printf("3. Binary Search\n");
+        printf("4. Insertion Sort\n");
+        printf("5. Selection Sort\n");
+        printf("6. Shell Sort\n");
+        printf("7. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+            case 1:
+                displayArray();
+                break;
+
+            case 2:
+                linearSearch();
+                break;
+
+            case 3:
+                binarySearch();
+                break;
+
+            case 4:
+                insertionSort();
+                printf("\nArray Sorted using Insertion Sort.\n");
+                displayArray();
+                break;
+
+            case 5:
+                selectionSort();
+                printf("\nArray Sorted using Selection Sort.\n");
+                displayArray();
+                break;
+
+            case 6:
+                shellSort();
+                printf("\nArray Sorted using Shell Sort.\n");
+                displayArray();
+                break;
+
+            case 7:
+                printf("Program Ended.\n");
+                break;
+
+            default:
+                printf("Invalid Choice!\n");
+        }
+
+    } while(choice != 7);
+
+    return 0;
+}
+
+void inputArray()
+{
+    int i;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter elements:\n");
+
+    for(i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+}
+
+void displayArray()
+{
+    int i;
+
+    printf("Array: ");
+
+    for(i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+
+    printf("\n");
+}
+
+void linearSearch()
+{
+    int key, i;
+
+    printf("Enter element to search: ");
+    scanf("%d", &key);
+
+    for(i = 0; i < n; i++)
+    {
+        if(arr[i] == key)
+        {
+            printf("Element found at position %d\n", i + 1);
+            return;
+        }
+    }
+
+    printf("Element not found.\n");
+}
+
+void binarySearch()
+{
+    int key;
+    int low = 0, high = n - 1, mid;
+
+    printf("NOTE: Array must be sorted.\n");
+
+    printf("Enter element to search: ");
+    scanf("%d", &key);
+
+    while(low <= high)
+    {
+        mid = (low + high) / 2;
+
+        if(arr[mid] == key)
+        {
+            printf("Element found at position %d\n", mid + 1);
+            return;
+        }
+
+        else if(arr[mid] < key)
+            low = mid + 1;
+
+        else
+            high = mid - 1;
+    }
+
+    printf("Element not found.\n");
+}
+
+void insertionSort()
+{
+    int i, j, key;
+
+    for(i = 1; i < n; i++)
+    {
+        key = arr[i];
+        j = i - 1;
+
+        while(j >= 0 && arr[j] > key)
+        {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+
+        arr[j + 1] = key;
+    }
+}
+
+void selectionSort()
+{
+    int i, j, min, temp;
+
+    for(i = 0; i < n - 1; i++)
+    {
+        min = i;
+
+        for(j = i + 1; j < n; j++)
+        {
+            if(arr[j] < arr[min])
+                min = j;
+        }
+
+        temp = arr[i];
+        arr[i] = arr[min];
+        arr[min] = temp;
+    }
+}
+
+void shellSort()
+{
+    int gap, i, j, temp;
+
+    for(gap = n / 2; gap > 0; gap = gap / 2)
+    {
+        for(i = gap; i < n; i++)
+        {
+            temp = arr[i];
+
+            for(j = i; j >= gap && arr[j - gap] > temp; j -= gap)
+            {
+                arr[j] = arr[j - gap];
+            }
+
+            arr[j] = temp;
+        }
+    }
+}
+
+
+Enter number of elements: 4
+Enter elements:
+56
+34
+789
+67
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 1
+
+Array: 56 34 789 67
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 2
+
+Enter element to search: 789
+Element found at position 3
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 4
+
+Array Sorted using Insertion Sort.
+Array: 34 56 67 789
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 5
+
+Array Sorted using Selection Sort.
+Array: 34 56 67 789
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 6
+
+Array Sorted using Shell Sort.
+Array: 34 56 67 789
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 3
+
+NOTE: Array must be sorted.
+Enter element to search: 789
+Element found at position 4
+
+========== MENU ==========
+1. Display Array
+2. Linear Search
+3. Binary Search
+4. Insertion Sort
+5. Selection Sort
+6. Shell Sort
+7. Exit
+Enter your choice: 7
+
+Program Ended.
