@@ -1,0 +1,125 @@
+#include <stdio.h>
+
+#define MAX 5
+
+struct Job
+{
+    int jobID;
+    char title[50];
+};
+
+struct Job queue[MAX];
+
+int front = -1;
+int rear = -1;
+
+void add()
+{
+    if ((rear + 1) % MAX == front)
+    {
+        printf("Queue is full!\n");
+        return;
+    }
+
+    if (front == -1)
+        front = 0;
+
+    rear = (rear + 1) % MAX;
+
+    printf("Enter Job ID: ");
+    scanf("%d", &queue[rear].jobID);
+
+    printf("Enter Document Title: ");
+    scanf(" %[^\n]", queue[rear].title);
+
+    printf("Job added successfully.\n");
+}
+
+void delete()
+{
+    if (front == -1)
+    {
+        printf("Queue is empty!\n");
+        return;
+    }
+
+    printf("Processed Job ID: %d\n", queue[front].jobID);
+    printf("Document: %s\n", queue[front].title);
+
+    if (front == rear)
+    {
+        front = -1;
+        rear = -1;
+    }
+    else
+    {
+        front = (front + 1) % MAX;
+    }
+}
+
+void display()
+{
+    int i;
+
+    if (front == -1)
+    {
+        printf("Queue is empty!\n");
+        return;
+    }
+
+    printf("\nPrint Queue:\n");
+
+    i = front;
+
+    while (1)
+    {
+        printf("Job ID: %d, Document: %s\n",
+               queue[i].jobID, queue[i].title);
+
+        if (i == rear)
+            break;
+
+        i = (i + 1) % MAX;
+    }
+}
+
+int main()
+{
+    int choice;
+
+    do
+    {
+        printf("\n===== PRINTER QUEUE =====");
+        printf("\n1. Add Job");
+        printf("\n2. Delete Job");
+        printf("\n3. Display Queue");
+        printf("\n4. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            add();
+            break;
+
+        case 2:
+            delete();
+            break;
+
+        case 3:
+            display();
+            break;
+
+        case 4:
+            printf("Exiting...");
+            break;
+
+        default:
+            printf("Invalid choice!");
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
