@@ -1,0 +1,261 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+void push(char x)
+{
+    stack[++top] = x;
+}
+
+char pop()
+{
+    return stack[top--];
+}
+
+char peek()
+{
+    return stack[top];
+}
+
+int isOperator(char x)
+{
+    return (x == '+' || x == '-' || x == '*' ||
+            x == '/' || x == '^');
+}
+
+int priority(char x)
+{
+    if (x == '^')
+        return 3;
+    if (x == '*' || x == '/')
+        return 2;
+    if (x == '+' || x == '-')
+        return 1;
+    return 0;
+}
+
+void reverse(char str[])
+{
+    int i, j;
+    char temp;
+
+    for (i = 0, j = strlen(str) - 1; i < j; i++, j--)
+    {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+}
+
+void infixToPostfix(char infix[], char postfix[])
+{
+    int i, j = 0;
+    char x;
+
+    top = -1;
+
+    for (i = 0; infix[i] != '\0'; i++)
+    {
+        x = infix[i];
+
+        if (isalnum(x))
+        {
+            postfix[j++] = x;
+        }
+        else if (x == '(')
+        {
+            push(x);
+        }
+        else if (x == ')')
+        {
+            while (top != -1 && peek() != '(')
+                postfix[j++] = pop();
+
+            pop();
+        }
+        else if (isOperator(x))
+        {
+            while (top != -1 && priority(peek()) >= priority(x))
+                postfix[j++] = pop();
+
+            push(x);
+        }
+    }
+
+    while (top != -1)
+        postfix[j++] = pop();
+
+    postfix[j] = '\0';
+}
+
+void prefixToPostfix(char prefix[], char postfix[])
+{
+    char s[MAX][MAX];
+    int t = -1;
+    int i;
+
+    for (i = strlen(prefix) - 1; i >= 0; i--)
+    {
+        if (isalnum(prefix[i]))
+        {
+            char temp[2];
+            temp[0] = prefix[i];
+            temp[1] = '\0';
+
+            strcpy(s[++t], temp);
+        }
+        else if (isOperator(prefix[i]))
+        {
+            char op1[MAX], op2[MAX], temp[MAX];
+
+            strcpy(op1, s[t--]);
+            strcpy(op2, s[t--]);
+
+            sprintf(temp, "%s%s%c", op1, op2, prefix[i]);
+
+            strcpy(s[++t], temp);
+        }
+    }
+
+    strcpy(postfix, s[t]);
+}
+
+void postfixToInfix(char postfix[], char infix[])
+{
+    char s[MAX][MAX];
+    int t = -1;
+    int i;
+
+    for (i = 0; postfix[i] != '\0'; i++)
+    {
+        if (isalnum(postfix[i]))
+        {
+            char temp[2];
+
+            temp[0] = postfix[i];
+            temp[1] = '\0';
+
+            strcpy(s[++t], temp);
+        }
+        else if (isOperator(postfix[i]))
+        {
+            char op1[MAX], op2[MAX], temp[MAX];
+
+            strcpy(op2, s[t--]);
+            strcpy(op1, s[t--]);
+
+            sprintf(temp, "(%s%c%s)", op1, postfix[i], op2);
+
+            strcpy(s[++t], temp);
+        }
+    }
+
+    strcpy(infix, s[t]);
+}
+
+void postfixToPrefix(char postfix[], char prefix[])
+{
+    char s[MAX][MAX];
+    int t = -1;
+    int i;
+
+    for (i = 0; postfix[i] != '\0'; i++)
+    {
+        if (isalnum(postfix[i]))
+        {
+            char temp[2];
+
+            temp[0] = postfix[i];
+            temp[1] = '\0';
+
+            strcpy(s[++t], temp);
+        }
+        else if (isOperator(postfix[i]))
+        {
+            char op1[MAX], op2[MAX], temp[MAX];
+
+            strcpy(op2, s[t--]);
+            strcpy(op1, s[t--]);
+
+            sprintf(temp, "%c%s%s", postfix[i], op1, op2);
+
+            strcpy(s[++t], temp);
+        }
+    }
+
+    strcpy(prefix, s[t]);
+}
+
+int main()
+{
+    int choice;
+    char expression[MAX];
+    char result[MAX];
+
+    do
+    {
+        printf("\n\n===== STACK ADT - EXPRESSION CONVERSION =====");
+        printf("\n1. Infix to Postfix");
+        printf("\n2. Prefix to Postfix");
+        printf("\n3. Postfix to Infix");
+        printf("\n4. Postfix to Prefix");
+        printf("\n5. Exit");
+
+        printf("\n\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            printf("Enter Infix expression: ");
+            scanf("%s", expression);
+
+            infixToPostfix(expression, result);
+
+            printf("Postfix expression: %s", result);
+            break;
+
+        case 2:
+            printf("Enter Prefix expression: ");
+            scanf("%s", expression);
+
+            prefixToPostfix(expression, result);
+
+            printf("Postfix expression: %s", result);
+            break;
+
+        case 3:
+            printf("Enter Postfix expression: ");
+            scanf("%s", expression);
+
+            postfixToInfix(expression, result);
+
+            printf("Infix expression: %s", result);
+            break;
+
+        case 4:
+            printf("Enter Postfix expression: ");
+            scanf("%s", expression);
+
+            postfixToPrefix(expression, result);
+
+            printf("Prefix expression: %s", result);
+            break;
+
+        case 5:
+            printf("Exiting program...");
+            break;
+
+        default:
+            printf("Invalid choice!");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
